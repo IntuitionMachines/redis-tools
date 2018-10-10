@@ -1,0 +1,4 @@
+redishelpers.egg-info/**
+*.swp
+dist/**
+build/**
