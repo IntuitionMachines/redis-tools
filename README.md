@@ -1,6 +1,14 @@
 # redis-tools
 A set of Redis wrappers for transparent cluster scale-out and backing store abstraction.
 
+You can install this package like so:
+
+```bash
+pip install hmtredishelp
+```
+
+# Provided tools
+
 ## RedisConn
 Simple Redis connection abstraction class that transparently splits master/slave* read+write operations for scaling out e.g. redis-sentinel clusters.
 
