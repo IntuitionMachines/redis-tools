@@ -4,6 +4,17 @@ A set of Redis wrappers for transparent cluster scale-out and backing store abst
 ## RedisConn
 Simple Redis connection abstraction class that transparently splits master/slave* read+write operations for scaling out e.g. redis-sentinel clusters.
 
+Uses the following environment variables:
+
+```
+REDISHOST (str)
+REDISPORT (int)
+REDISPW (str)
+REDISTIMEOUT (float: seconds)
+SENTINELMASTER (str)
+REDIS_SSL (str == 'True' or 'False')
+```
+
 ## RedisDict
 Python Dict-style abstraction class that enables transparent fetch and update against a redis hash backing store.
 
