@@ -25,4 +25,4 @@ posix4e and tinkerer.
 
 (C) 2018 hCaptcha.
 
-* Not our terminology of choice, but keeping here to remain consistent with redis usage.
+    * Not our terminology of choice, but keeping here to remain consistent with redis usage.
