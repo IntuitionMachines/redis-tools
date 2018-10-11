@@ -1,17 +1,17 @@
-# Redis Wrappers
+# redis-tools
+A set of Redis wrappers for transparent cluster scale-out and backing store abstraction.
 
-We provide a bunch of wrappers around ephemeral stores to make them more useful
+## RedisConn
+Simple Redis connection abstraction class that transparently splits master/slave* read+write operations for scaling out e.g. redis-sentinel clusters.
 
-- Abstract basic master/slave* work for the master and the slave.
-- Provide simple python abstractions around type *written by tinkerer*
-- redis support
-
-
-
+## RedisDict
+Python Dict-style abstraction class that enables transparent fetch and update against a redis hash backing store.
 
 
+Authors:
 
+posix4e and tinkerer.
 
+(C) 2018 hCaptcha.
 
-
-*I hate the term master/slave but this is what redis and redis sentry used when we wrote this
+* Not our terminology of choice, but keeping here to remain consistent with redis usage.
