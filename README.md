@@ -3,7 +3,7 @@
 We provide a bunch of wrappers around ephemeral stores to make them more useful
 
 - Abstract basic master/slave* work for the master and the slave.
-- Provide simple python abstractions around type
+- Provide simple python abstractions around type *written by tinkerer*
 - redis support
 
 
