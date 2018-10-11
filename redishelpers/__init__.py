@@ -4,10 +4,11 @@ from redis import StrictRedis
 from redis.sentinel import Sentinel
 
 SLAVEABLE_FUNCS = [
-    "DBSIZE", "DEBUG", "GET", "GETBIT", "GETRANGE", "HGET", "HGETALL", "HKEYS", "HLEN", "HMGET",
-    "HVALS", "INFO", "LASTSAVE", "LINDEX", "LLEN", "LRANGE", "MGET", "RANDOMKEY", "SCARD",
-    "SMEMBERS", "RANDOMKEY", "SCARD", "SMEMBERS", "SRANDMEMBER", "STRLEN", "TTL", "ZCARD",
-    "ZRANGE", "ZRANGEBYSCORE", "ZREVRANGE", "ZREVRANGEBYSCORE", "ZSCORE"
+    "DBSIZE", "DEBUG", "GET", "GETBIT", "GETRANGE", "HGET", "HGETALL", "HKEYS",
+    "HLEN", "HMGET", "HVALS", "INFO", "LASTSAVE", "LINDEX", "LLEN", "LRANGE",
+    "MGET", "RANDOMKEY", "SCARD", "SMEMBERS", "RANDOMKEY", "SCARD", "SMEMBERS",
+    "SRANDMEMBER", "STRLEN", "TTL", "ZCARD", "ZRANGE", "ZRANGEBYSCORE",
+    "ZREVRANGE", "ZREVRANGEBYSCORE", "ZSCORE"
 ]
 
 
@@ -61,31 +62,6 @@ class RedisConn:
         return handlerFunc
 
 
-class RedisDict():
-    def __init__(self, conn, key, ex=604800):
-        self.key = key
-        self.conn = conn
-        self.ex = ex
-
-    def __getitem__(self, item):
-        return self.conn.hget(self.key, item)
-
-    def __contains__(self, item):
-        return self.conn.hexists(self.key, item)
-
-    def __setitem__(self, item, val):
-        self.conn.hset(self.key, item, val)
-
-    def __repr__(self):
-        return repr(self.conn.hgetall(self.key))
-
-    def __iter__(self):
-        return iter(self.conn.hgetall(self.key))
-
-    def add_items(self, items):
-        self.conn.hmset(self.key, items)
-
-
 class RedisUtils:
     def __init__(self):
         self.conn = RedisConn()
@@ -110,3 +86,28 @@ class RedisUtils:
             self.conn.hmset(key, val)
         else:
             self.conn.set(key, val, ex=self.ex)
+
+
+class RedisDict():
+    def __init__(self, conn, key, ex=604800):
+        self.key = key
+        self.conn = conn
+        self.ex = ex
+
+    def __getitem__(self, item):
+        return self.conn.hget(self.key, item)
+
+    def __contains__(self, item):
+        return self.conn.hexists(self.key, item)
+
+    def __setitem__(self, item, val):
+        self.conn.hset(self.key, item, val)
+
+    def __repr__(self):
+        return repr(self.conn.hgetall(self.key))
+
+    def __iter__(self):
+        return iter(self.conn.hgetall(self.key))
+
+    def add_items(self, items):
+        self.conn.hmset(self.key, items)
