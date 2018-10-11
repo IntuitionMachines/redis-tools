@@ -27,12 +27,12 @@ class RedisConn:
         redisport = int(os.getenv('REDISPORT', '6379'))
         redispassword = os.getenv('REDISPW', None)
         redistimeout = float(os.getenv('REDISTIMEOUT', "1.1"))
-        self.sentinelmaster = os.getenv("SENTINELMASTER")
+        self.sentinelmaster = os.getenv('SENTINELMASTER')
 
         if redishost is "localhost":
-            redissl = "true" in os.getenv("REDIS_SSL", "False").lower()
+            redissl = "true" in os.getenv('REDIS_SSL', 'False').lower()
         else:
-            redissl = "true" in os.getenv("REDIS_SSL", "True").lower()
+            redissl = "true" in os.getenv('REDIS_SSL', 'True').lower()
 
         if self.sentinelmaster:
             self.conn = Sentinel([(redishost, redisport)],
