@@ -1,13 +1,13 @@
 from setuptools import setup
 
-setup(name='redishelpers',
-      version='0.1.1',
+setup(name='hmtredishelp',
+      version='0.1.2',
       description='A set of tools we use to easily access redis',
-      url='git@github.com:HCaptcha/redis-tools.git',
+      url='https://github.com/IntuitionMachines/redis-tools',
       author='Intuition Machines',
-      author_email='contact@intuitionmachines.com',
+      author_email='dev@intuitionmachines.com',
       license='MIT',
-      packages=['redishelpers'],
+      packages=['hmtredishelp'],
       install_requires=["redis"],
       zip_safe=False)
 
