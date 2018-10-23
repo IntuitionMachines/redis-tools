@@ -1,4 +1,4 @@
-redishelpers.egg-info/**
+hmtredishelp.egg-info/**
 *.swp
 dist/**
 build/**

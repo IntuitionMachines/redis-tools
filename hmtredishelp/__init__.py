@@ -90,6 +90,9 @@ class RedisUtils:
         elif (type == b'string'):
             ret =  self.conn.get(key)
             
+        else:
+            ret = None
+
         if ret is not None:
             return ret
         return {}
