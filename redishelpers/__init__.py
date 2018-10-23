@@ -85,10 +85,14 @@ class RedisUtils:
     def __getitem__(self, key):
         type = self.conn.type(key)
         if (type == b'hash'):
-            return RedisDict(self.conn, key, ex=self.ex)
+            ret = RedisDict(self.conn, key, ex=self.ex)
 
         elif (type == b'string'):
-            return self.conn.get(key)
+            ret =  self.conn.get(key)
+            
+        if ret is not None:
+            return ret
+        return {}
 
     def __setitem__(self, key, val):
         if (type(val) == dict):
