@@ -22,6 +22,7 @@ class RedisConn:
     '''
     simple abstraction class to transparently split redis master/slave read+write operations for scaling out e.g. redis-sentinel clusters.
     '''
+
     def __init__(self):
         redishost = os.getenv('REDISHOST', 'localhost')
         redisport = int(os.getenv('REDISPORT', '6379'))
@@ -73,8 +74,9 @@ class RedisConn:
 
 CONN = RedisConn()
 # Heat up the redis cache
-if "true" os.getenv("PREPING", 'false').lower():
+if "true" in os.getenv("PREPING", 'false').lower():
     CONN.ping()
+
 
 class RedisUtils:
     def __init__(self):
@@ -93,8 +95,8 @@ class RedisUtils:
             ret = RedisDict(self.conn, key, ex=self.ex)
 
         elif (type == b'string'):
-            ret =  self.conn.get(key)
-            
+            ret = self.conn.get(key)
+
         else:
             ret = None
 
@@ -113,6 +115,7 @@ class RedisDict():
     '''
     python dict-style class that enables transparent fetch and update against a redis hash backing store.
     '''
+
     def __init__(self, conn, key, ex=604800):
         self.key = key
         self.conn = conn
