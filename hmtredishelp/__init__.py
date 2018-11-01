@@ -73,7 +73,7 @@ class RedisConn:
 
 CONN = RedisConn()
 # Heat up the redis cache
-if "true" os.getenv("PREPING", 'false').lower()
+if "true" os.getenv("PREPING", 'false').lower():
     CONN.ping()
 
 class RedisUtils:
