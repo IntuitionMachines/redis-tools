@@ -71,9 +71,10 @@ class RedisConn:
         return handlerFunc
 
 
+CONN = RedisConn()
 class RedisUtils:
     def __init__(self):
-        self.conn = RedisConn()
+        self.conn = CONN
         self.ex = 604800
 
     def keys(self, filter=""):
