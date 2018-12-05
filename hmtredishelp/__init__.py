@@ -3,7 +3,7 @@ redis-helpers library
 
 (C) 2018 hCaptcha. Released under the MIT license.
 '''
-
+print ("hmtredishelp version 0.21.1")
 import os
 
 from redis import StrictRedis
@@ -84,11 +84,18 @@ class RedisUtils:
         self.ex = 604800
 
     def keys(self, filter=""):
-        if (filter):
-            return [k for k in self.conn.keys() if filter(k)]
+        
+        if (filter):         
+            if (type(filter) == type("")):
+                return self.conn.keys(filter)        
+            elif (type(filter) == type(lambda x:x)):
+                return [k for k in self.conn.keys() if filter(k)]
         else:
-            return self.conn.keys()
-
+            return self.conn.keys()    
+    
+    def scan_iter(self, pattern):
+        return self.conn.scan_iter(pattern)
+    
     def __getitem__(self, key):
         type = self.conn.type(key)
         if (type == b'hash'):
@@ -109,8 +116,10 @@ class RedisUtils:
             self.conn.hmset(key, val)
         else:
             self.conn.set(key, val, ex=self.ex)
-
-
+            
+    def __contains__(self, key):
+        return self.conn.exists(key)
+        
 class RedisDict():
     '''
     python dict-style class that enables transparent fetch and update against a redis hash backing store.
