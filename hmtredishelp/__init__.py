@@ -93,6 +93,9 @@ class RedisUtils:
         else:
             return self.conn.keys()    
     
+    def scan(self, cursor, pattern, count):
+        return self.conn.scan(cursor, pattern, count)
+    
     def scan_iter(self, pattern):
         return self.conn.scan_iter(pattern)
     
