@@ -185,6 +185,8 @@ class RedisList():
     def get(self):
         return self.conn.lrange(self.key, 0, -1)
 
+    def __contains__(self, item):
+        return item in self.conn.lrange(self.key, 0, -1)
     def trim(self, start, stop):
         return self.conn.ltrim(self.key, start, stop)
 
