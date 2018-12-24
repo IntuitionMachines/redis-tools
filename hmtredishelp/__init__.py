@@ -28,6 +28,7 @@ class RedisConn:
         redisport = int(os.getenv('REDISPORT', '6379'))
         redispassword = os.getenv('REDISPW', None)
         redistimeout = float(os.getenv('REDISTIMEOUT', "1.1"))
+        self.slaveonly = "true" in os.getenv("REDIS_SLAVE_ONLY", "false").lower()
         self.sentinelmaster = os.getenv('SENTINELMASTER')
 
         if redishost is "localhost":
@@ -67,10 +68,12 @@ class RedisConn:
             if name.upper() in SLAVEABLE_FUNCS:
                 return getattr(self.get_slave(), name)(*args, **kwargs)
             else:
-                return getattr(self.get_master(), name)(*args, **kwargs)
+                if self.slaveonly:
+                    raise ("Unable to run master command in slave only mode")
+                else:
+                    return getattr(self.get_master(), name)(*args, **kwargs)
 
         return handlerFunc
-
 
 CONN = RedisConn()
 # Heat up the redis cache
@@ -230,4 +233,3 @@ class RedisSet():
 
     def __len__(self):
         return self.conn.scard(self.key)
-       
