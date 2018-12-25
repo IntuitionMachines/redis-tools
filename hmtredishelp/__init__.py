@@ -122,6 +122,16 @@ class RedisUtils:
         return {}
 
     def __setitem__(self, key, val):
+        def convert_keys_to_string(dictionary):
+            """Recursively converts dictionary keys to strings."""
+            if not isinstance(dictionary, dict):
+                return dictionary
+            return dict((str(k), convert_keys_to_string(v)) 
+                for k, v in dictionary.items())
+
+        val = convert_keys_to_string(val)
+        print("Key {} Val{} ".format(key,val))
+
         if not isinstance(key, str):
             key = str(key)
 
