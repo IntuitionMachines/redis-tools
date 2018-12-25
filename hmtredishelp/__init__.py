@@ -122,10 +122,8 @@ class RedisUtils:
         return {}
 
     def __setitem__(self, key, val):
-        if not isinstance(key, str):
-            key = str(key)
-
         if (type(val) == dict):
+            val = {str(k): str(v) for k, v in val.items()}
             self.conn.hmset(key, val)
         elif (type(val) == list):
             self.conn.rpush(key, *val)
