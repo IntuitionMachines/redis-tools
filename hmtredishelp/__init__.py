@@ -49,6 +49,7 @@ class RedisConn:
                 db=0,
                 decode_responses=False,
                 socket_timeout=redistimeout,
+                ssl_cert_reqs=None,
                 ssl=redissl)
 
     def get_master(self):
@@ -121,6 +122,9 @@ class RedisUtils:
         return {}
 
     def __setitem__(self, key, val):
+        if not isinstance(key, str):
+            key = str(key)
+
         if (type(val) == dict):
             self.conn.hmset(key, val)
         elif (type(val) == list):
