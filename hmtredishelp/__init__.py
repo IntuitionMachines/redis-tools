@@ -8,6 +8,7 @@ import os
 
 from redis import StrictRedis
 from redis.sentinel import Sentinel
+from itertools import izip_longest
 
 SLAVEABLE_FUNCS = [
     "DBSIZE", "DEBUG", "GET", "GETBIT", "GETRANGE", "HGET", "HGETALL", "HKEYS",
@@ -241,6 +242,9 @@ class RedisBatch():
     '''
     creates a redis batch for storage
     '''
-    def __init__(self, conn):
-        self.conn = CONN
-        self.ex = EX 
+    def __init__(self, batch_size=10000): # figure out standard batch size, set as env var or global
+        self.batch_size = batch_size
+
+    def batcher(self, iterable):
+        args = [iter(iterable)] * self.batch_size
+        return izip_longest(*args)
