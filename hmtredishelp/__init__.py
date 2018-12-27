@@ -17,6 +17,7 @@ SLAVEABLE_FUNCS = [
     "ZREVRANGE", "ZREVRANGEBYSCORE", "ZSCORE"
 ]
 
+EX = 604800
 
 class RedisConn:
     '''
@@ -85,7 +86,7 @@ if "true" in os.getenv("PREPING", 'false').lower():
 class RedisUtils:
     def __init__(self):
         self.conn = CONN
-        self.ex = 604800
+        self.ex = EX
 
     def keys(self, filter=""):
         
@@ -170,7 +171,7 @@ class RedisList():
     '''
     python array-style class that enables transparent fetch and update against a redis list.
     '''
-    def __init__(self, conn, key, ex=604800):
+    def __init__(self, conn, key, ex=EX):
         self.key = key
         self.conn = conn
         self.ex = ex
@@ -213,7 +214,7 @@ class RedisSet():
     '''
     python array-style class that enables transparent fetch and update against a redis set
     '''
-    def __init__(self, conn, key, ex=604800):
+    def __init__(self, conn, key, ex=EX):
         self.key = key
         self.conn = conn
         self.ex = ex
@@ -235,3 +236,11 @@ class RedisSet():
 
     def __len__(self):
         return self.conn.scard(self.key)
+
+class RedisBatch():
+    '''
+    creates a redis batch for storage
+    '''
+    def __init__(self, conn):
+        self.conn = CONN
+        self.ex = EX #figure out why this is a magic number
