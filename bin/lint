@@ -1,0 +1,7 @@
+#!/bin/bash
+set -exu
+
+default_lint=`find . -type f -name '*.py'`
+LINT=${1-$default_lint}
+yapf --diff ${LINT}
+mypy --ignore-missing-imports ${LINT}
