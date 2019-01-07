@@ -7,7 +7,7 @@ from hmtredishelp import RedisConn
 EXPIRE = int(os.getenv("EXPIRE", "86400"))
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000"))
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "10000"))
-DELETE_KEYS = "true" in os.getenv("DELETE_KEYS", "false")).lower()
+DELETE_KEYS = "true" in os.getenv("DELETE_KEYS", "false").lower()
 LOG = logging.getLogger("redis_dump")
 CONN = RedisConn()
 
