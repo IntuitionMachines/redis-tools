@@ -12,16 +12,30 @@ LOG = logging.getLogger("redis_dump")
 CONN = RedisConn()
 
 fns = []  # type: ignore
+'''
+These are tools for dumping Redis to S3/minio or your storage of your choice. 
+'''
 
+'''
+This is a function that takes in a list of matches and processes the raw matches into 
+a json format
+'''
 def load_batch(write_function, matches, batch=BATCH_SIZE):
     today = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     for match in matches: 
         process_raw(match, today, write_function)
 
+'''
+Helper function that calls the write function passed to it, and 
+dumps them to a file with the given name of ${date}_${match}_${chunk}.json
+'''
 def dump_to_file(data, filename, write_function):
     write_function(filename, json.dumps(data))
     fns.append(filename)
 
+'''
+Function that processes the data and makes the file names
+'''
 def process_raw(match, date, write_function):
     cursor = '0'
     data = {}
@@ -44,5 +58,4 @@ def process_raw(match, date, write_function):
         # delete on flag
         if DELETE_KEYS:
             CONN.delete(*keys) # delete keys
-        # data.clear() # free memory
         count += 1
