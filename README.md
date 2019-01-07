@@ -26,6 +26,23 @@ REDIS_SSL (str == 'True' or 'False')
 ## RedisDict
 Python Dict-style abstraction class that enables transparent fetch and update against a redis hash backing store.
 
+## Redis Dump Utils
+A simple dump tool that dumps to the storage solution of your choice.
+
+### Usage
+To use the dump, simply pass it a write function, and a list of the keys you wish to match.
+
+```
+from hmtredishelp import redis_dump_utils as rdu
+rdu.loadbatch(write_function, match_list)
+```
+
+Uses the following enviroment variables:
+```
+EXPIRE (int)
+BATCH_SIZE (int)
+DELETE_KEYS (str == 'True' or 'False')
+```
 
 Authors:
 
