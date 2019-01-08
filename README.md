@@ -44,6 +44,10 @@ BATCH_SIZE (int)
 DELETE_KEYS (str == 'True' or 'False')
 ```
 
+## Testing
+In order to run the tests, make sure you have a local Redis running.
+From there, run ```python3 /tests/tests.py```
+
 Authors:
 
 posix4e and tinkerer.
