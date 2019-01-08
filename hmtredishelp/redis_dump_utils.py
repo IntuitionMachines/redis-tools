@@ -4,10 +4,10 @@ import json
 import datetime
 from hmtredishelp import RedisConn
 
-EXPIRE = int(os.getenv("EXPIRE", "86400"))
-BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000"))
-CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "10000"))
-DELETE_KEYS = "true" in os.getenv("DELETE_KEYS", "false").lower()
+BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000")) # size of each key-batch
+DELETE_KEYS = "true" in os.getenv("DELETE_KEYS", "false").lower() # if true, keys in batch will be deleted after every run
+INDIVIDUAL_FILES = "true" in os.getenv("INDIVIDUAL_FILES", "false").lower() # export each key to its own file
+
 LOG = logging.getLogger("redis_dump")
 CONN = RedisConn()
 
