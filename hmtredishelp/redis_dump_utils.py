@@ -53,6 +53,8 @@ def process_raw(match, date, write_function, individual_files):
                     fixed_values.append(value.decode('utf-8'))
                 data.update(dict(zip(keys, fixed_values)))
                 filename = f'{key}_{date}.json'
+                dump_to_file(data, filename, write_function)
+                data = {}
         else:
             values = CONN.mget(keys) # grab the formatted keys
             fixed_values = [] #
