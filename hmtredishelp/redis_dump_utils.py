@@ -37,24 +37,18 @@ def dump_to_file(data, filename, write_function):
 Function that processes the data and makes the file names
 '''
 def process_raw(match, date, write_function, individual_files):
-    cursor = '0'
-    data = {}
     count = 0
+    cursor = '0'
     while cursor != 0:
         cursor, keys = CONN.scan(match=f'{match}_*', cursor=cursor, count=BATCH_SIZE) # match the keys we want to grab
         keys = [key.decode('utf-8') for key in keys if not key == None] # decode keys, throw out blank keys
         if individual_files:
             for key in keys:
                 fixed_values = []
-                values = CONN.mget(key)
-                for value in values:
-                    if not value:
-                        value = b'{}'
-                    fixed_values.append(value.decode('utf-8'))
-                data.update(dict(zip(keys, fixed_values)))
-                filename = f'{key}_{date}.json'
-                dump_to_file(data, filename, write_function)
-                data = {}
+                fixed_values = get_data(key) # get each value
+                # dump batch to file and reset dict - expire/delete keys here
+                filename = f'{match}_{date}_{count}.json'
+                zip_and_dump(key, fixed_values, filename, write_function)
         else:
             values = CONN.mget(keys) # grab the formatted keys
             fixed_values = [] #
@@ -63,11 +57,29 @@ def process_raw(match, date, write_function, individual_files):
                 if not value:
                     value = b'{}'
                 fixed_values.append(value.decode('utf-8'))
-            data.update(dict(zip(keys, fixed_values))) # map the values to the keys, and put in dict
-            # dump batch to file and reset dict - expire/delete keys here
             filename = f'{match}_{date}_{count}.json'
-            dump_to_file(data, filename, write_function)
+            zip_and_dump(keys, fixed_values, filename, write_function)
             # delete on flag
         if DELETE_KEYS:
             CONN.delete(*keys) # delete keys
         count += 1
+        
+'''
+This function calls mget on all keys given to it, and returns their values
+'''
+def get_data(keys): # this will take a individual key or a list of keys
+    fixed_values = []
+    values = CONN.mget(keys)
+    for value in values:
+        if not value:
+            value = b'{}' # set value to empty dict
+        fixed_values.append(value.decode('utf-8'))
+    return fixed_values
+
+'''
+helper method for zipping the data, and dumping it to a file. 
+'''
+def zip_and_dump(keys, values, filename, write_function):
+    data = {}
+    data.update(dict(zip(keys, values)))
+    dump_to_file(data, filename, write_function)
