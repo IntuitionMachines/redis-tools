@@ -44,22 +44,15 @@ def process_raw(match, date, write_function, individual_files):
         keys = [key.decode('utf-8') for key in keys if not key == None] # decode keys, throw out blank keys
         if individual_files:
             for key in keys:
-                fixed_values = []
                 fixed_values = get_data(key) # get each value
                 # dump batch to file and reset dict - expire/delete keys here
                 filename = f'{match}_{date}_{count}.json'
                 zip_and_dump(key, fixed_values, filename, write_function)
         else:
-            values = CONN.mget(keys) # grab the formatted keys
-            fixed_values = [] #
-            # fix values for output, set blank values to an empty dict
-            for value in values:
-                if not value:
-                    value = b'{}'
-                fixed_values.append(value.decode('utf-8'))
+            fixed_values = get_data(keys)
             filename = f'{match}_{date}_{count}.json'
             zip_and_dump(keys, fixed_values, filename, write_function)
-            # delete on flag
+        # delete on flag
         if DELETE_KEYS:
             CONN.delete(*keys) # delete keys
         count += 1
