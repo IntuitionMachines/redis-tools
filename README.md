@@ -21,6 +21,7 @@ REDISPW (str)
 REDISTIMEOUT (float: seconds)
 SENTINELMASTER (str)
 REDIS_SSL (str == 'True' or 'False')
+INDIVIDUAL_FILES (str == 'True' or 'False')
 ```
 
 ## RedisDict
@@ -42,7 +43,11 @@ Uses the following enviroment variables:
 EXPIRE (int)
 BATCH_SIZE (int)
 DELETE_KEYS (str == 'True' or 'False')
+INDIVIDUAL_FILES (str == 'True' or 'False')
 ```
+INDIVIDUAL_FILES is a flag for whether or not you want each key to (and its values) to an individual file
+DELETE_KEYS is flag for whether or not you want to delete the keys after each batch is done being processed. Delete is faster than expire, as you have to expire keys individually
+BATCH_SIZE is how many keys to get at once, this is equivalent to COUNT when you set count in a cursor, in redis.py
 
 ## Testing
 In order to run the tests, make sure you have a local Redis running.
