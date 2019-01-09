@@ -7,6 +7,7 @@ from hmtredishelp import RedisConn
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000")) # size of each key-batch
 DELETE_KEYS = "true" in os.getenv("DELETE_KEYS", "false").lower() # if true, keys in batch will be deleted after every run
 INDIVIDUAL_FILES = "true" in os.getenv("INDIVIDUAL_FILES", "false").lower() # export each key to its own file
+EXPIRE = int(os.getenv("EXPIRE", "86400"))
 
 LOG = logging.getLogger("redis_dump")
 CONN = RedisConn()
@@ -48,6 +49,9 @@ def process_raw(match, date, write_function, individual_files):
                 # dump batch to file and reset dict - expire/delete keys here
                 filename = f'{match}_{date}_{count}.json'
                 zip_and_dump(key, fixed_values, filename, write_function)
+                if DELETE_KEYS:
+                    if CONN.ttl(key) > EXPIRE:
+                        CONN.expire(key) # only set expire if it is greater than the EXPIRE time.
         else:
             fixed_values = get_data(keys)
             filename = f'{match}_{date}_{count}.json'
