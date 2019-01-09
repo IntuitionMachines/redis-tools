@@ -47,11 +47,11 @@ INDIVIDUAL_FILES (str == 'True' or 'False')
 ```
 INDIVIDUAL_FILES is a flag for whether or not you want each key to (and its values) to an individual file.
 
-DELETE_KEYS is flag for whether or not you want to delete the keys after each batch is done being processed. Delete is faster than expire, as you have to expire keys individually. If DELETE_KEYS is set, and you are looping through each key to output to individual files, keys will be expired instead. CAUTION: IF YOU ARE USING THIS, AND YOU ARE NOT LOOPING THROUGH THE KEYS, YOUR KEYS WILL BE DELETED.
+DELETE_KEYS is flag for whether or not you want to delete the keys after each batch is done being processed. Delete is faster than expire, as you have to expire keys individually. If DELETE_KEYS is set, and you are looping through each key to output to individual files, keys will be expired instead. CAUTION: IF YOU ARE USING THIS, AND YOU ARE NOT LOOPING THROUGH THE KEYS, YOUR KEYS WILL BE DELETED. With the most up-to-date version of Redis, there is no way to expire keys in a batch. You must loop through, and expire individually.
 
 BATCH_SIZE is how many keys to get at once, this is equivalent to COUNT when you set count in a cursor, in redis.py.
 
-EXPIRE is the TTL for each key. This is only used when you want to loop through and output to individual files. The default is set to one day.  
+EXPIRE is the TTL for each key (in seconds). This is only used when you want to loop through and output to individual files. The default is set to one day.  
 
 The output files are `${match or key}_${date}.json`. As of right now, the only format outputted is JSON. 
 
