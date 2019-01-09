@@ -45,9 +45,17 @@ BATCH_SIZE (int)
 DELETE_KEYS (str == 'True' or 'False')
 INDIVIDUAL_FILES (str == 'True' or 'False')
 ```
-INDIVIDUAL_FILES is a flag for whether or not you want each key to (and its values) to an individual file
-DELETE_KEYS is flag for whether or not you want to delete the keys after each batch is done being processed. Delete is faster than expire, as you have to expire keys individually
-BATCH_SIZE is how many keys to get at once, this is equivalent to COUNT when you set count in a cursor, in redis.py
+INDIVIDUAL_FILES is a flag for whether or not you want each key to (and its values) to an individual file.
+
+DELETE_KEYS is flag for whether or not you want to delete the keys after each batch is done being processed. Delete is faster than expire, as you have to expire keys individually.
+
+BATCH_SIZE is how many keys to get at once, this is equivalent to COUNT when you set count in a cursor, in redis.py.
+
+The output files are `${match or key}_${date}.json`. As of right now, the only format outputted is JSON. 
+
+## Testing
+In order to run the tests, make sure you have a local Redis running.
+From there, run ```python3 ./tests/tests.py```
 
 Authors:
 
