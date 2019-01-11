@@ -1,3 +1,6 @@
+'''
+Classes for serializing and deserializing redis data into json
+'''
 class RedisDict():
     '''
     python dict-style class that enables transparent fetch and update against a redis hash backing store.
