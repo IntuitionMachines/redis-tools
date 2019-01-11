@@ -2,7 +2,7 @@ import logging
 import os
 import json
 import datetime
-from hmtredishelp import RedisConn
+from src import Conn
 
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000")) # size of each key-batch
 DELETE_KEYS = "true" in os.getenv("DELETE_KEYS", "false").lower() # if true, keys in batch will be deleted after every run
@@ -10,7 +10,7 @@ INDIVIDUAL_FILES = "true" in os.getenv("INDIVIDUAL_FILES", "false").lower() # ex
 EXPIRE = int(os.getenv("EXPIRE", "86400"))
 
 LOG = logging.getLogger("redis_dump")
-CONN = RedisConn()
+CONN = Conn()
 
 fns = []  # type: ignore
 '''
