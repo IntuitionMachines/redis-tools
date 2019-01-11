@@ -2,7 +2,8 @@ import logging
 import os
 import json
 import datetime
-from src import Conn
+
+from conn import Conn
 
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000")) # size of each key-batch
 DELETE_KEYS = "true" in os.getenv("DELETE_KEYS", "false").lower() # if true, keys in batch will be deleted after every run
