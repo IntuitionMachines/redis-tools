@@ -1,4 +1,4 @@
-from hmtredishelp import RedisConn
+from conn import Conn
 import time
 import sys, logging
 import unittest
@@ -8,7 +8,7 @@ class HMTRedisHelpTests(unittest.TestCase):
         '''
         Tests to see if there is in fact a redis connection available
         '''
-        conn = RedisConn()
+        conn = Conn()
         self.assertEqual(conn.ping(), True, "should be pong")
 
 if __name__ == '__main__':

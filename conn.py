@@ -10,7 +10,6 @@ SLAVEABLE_FUNCS = [
     "ZREVRANGE", "ZREVRANGEBYSCORE", "ZSCORE"
 ]
 
-
 class Conn:
     '''
     simple abstraction class to transparently split redis master/slave read+write operations for scaling out e.g. redis-sentinel clusters.
