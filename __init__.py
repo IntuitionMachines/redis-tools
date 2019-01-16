@@ -5,6 +5,8 @@ redis-helpers library
 '''
 import os
 from conn import Conn
+from serde import *
+from dump import *
 
 CONN = Conn()
 # Heat up the redis cache
