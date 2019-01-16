@@ -3,5 +3,9 @@ set -exu
 
 default_lint=`find . -type f -name '*.py'`
 LINT=${1-$default_lint}
-yapf --diff ${LINT}
+if [ -z ${CI+x} ]
+	then yapf -i ${LINT}
+else 
+	yapf --diff ${LINT}
+fi
 mypy --ignore-missing-imports ${LINT}
