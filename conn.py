@@ -10,6 +10,7 @@ SLAVEABLE_FUNCS = [
     "ZREVRANGE", "ZREVRANGEBYSCORE", "ZSCORE"
 ]
 
+
 class Conn:
     '''
     simple abstraction class to transparently split redis master/slave read+write operations for scaling out e.g. redis-sentinel clusters.
@@ -20,7 +21,8 @@ class Conn:
         redisport = int(os.getenv('REDISPORT', '6379'))
         redispassword = os.getenv('REDISPW', None)
         redistimeout = float(os.getenv('REDISTIMEOUT', "1.1"))
-        self.slaveonly = "true" in os.getenv("REDIS_SLAVE_ONLY", "false").lower()
+        self.slaveonly = "true" in os.getenv("REDIS_SLAVE_ONLY",
+                                             "false").lower()
         self.sentinelmaster = os.getenv('SENTINELMASTER')
 
         if redishost is "localhost":
