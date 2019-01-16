@@ -4,4 +4,4 @@ trap "docker-compose logs --no-color ;docker-compose kill" SIGINT SIGTERM EXIT
 docker-compose kill
 docker-compose build
 docker-compose up -d lint
-docker-compose run lint -e CI=true
+docker-compose run -e CI=true './bin/lint'
