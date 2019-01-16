@@ -1,0 +1,7 @@
+pool:
+  name: Hosted Ubuntu 1604
+steps:
+  - script: |
+      ./bin/ci
+    displayName: 'Run lint'
+    condition: succeededOrFailed()
