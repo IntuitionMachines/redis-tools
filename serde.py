@@ -1,6 +1,8 @@
 '''
 Classes for serializing and deserializing redis data into json
 '''
+
+
 class RedisDict():
     '''
     python dict-style class that enables transparent fetch and update against a redis hash backing store.
@@ -32,10 +34,12 @@ class RedisDict():
     def add_items(self, items):
         self.conn.hmset(self.key, items)
 
+
 class RedisList():
     '''
     python array-style class that enables transparent fetch and update against a redis list.
     '''
+
     def __init__(self, conn, key, ex=604800):
         self.key = key
         self.conn = conn
@@ -58,15 +62,16 @@ class RedisList():
 
     def __contains__(self, item):
         return item in self.conn.lrange(self.key, 0, -1)
+
     def trim(self, start, stop):
         return self.conn.ltrim(self.key, start, stop)
 
     def __repr__(self):
         return repr(self.conn.lrange(self.key, 0, -1))
 
-    def __getitem__(self, id):    
+    def __getitem__(self, id):
         if isinstance(id, slice):
-            return  self.conn.lrange(self.key, id.start, id.stop) 
+            return self.conn.lrange(self.key, id.start, id.stop)
         return self.conn.lindex(self.key, id)
 
     def __setitem__(self, id, value):
@@ -75,10 +80,12 @@ class RedisList():
     def __len__(self):
         return self.conn.llen(self.key)
 
+
 class RedisSet():
     '''
     python array-style class that enables transparent fetch and update against a redis set
     '''
+
     def __init__(self, conn, key, ex=604800):
         self.key = key
         self.conn = conn
