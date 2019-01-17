@@ -33,6 +33,7 @@ def load_batch(write_function,
     today = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     for match in matches:
         process_raw(match, today, write_function, individual_files)
+    return fns
 
 
 '''
