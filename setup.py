@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='redis-tools',
+    name='redistools',
     version='1.0.0',
     description='A set of tools we use to easily access redis',
     url='https://github.com/IntuitionMachines/redis-tools',
