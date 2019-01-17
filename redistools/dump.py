@@ -56,7 +56,7 @@ def process_raw(match, date, write_function, individual_files):
     cursor = '0'
     while cursor != 0:
         cursor, keys = CONN.scan(
-            match=match, cursor=cursor,
+            match=f'{match}_*', cursor=cursor,
             count=BATCH_SIZE)  # match the keys we want to grab
         keys = [key.decode('utf-8') for key in keys
                 if not key == None]  # decode keys, throw out blank keys
