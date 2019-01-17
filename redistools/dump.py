@@ -3,7 +3,7 @@ import os
 import json
 import datetime
 
-from conn import Conn
+from conn import *
 
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000"))  # size of each key-batch
 DELETE_KEYS = "true" in os.getenv(
