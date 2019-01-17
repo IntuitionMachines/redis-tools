@@ -4,9 +4,9 @@ redis-helpers library
 (C) 2018 hCaptcha. Released under the MIT license.
 '''
 import os
-from conn import *
-from serde import *
-from dump import *
+from redistools.conn import Conn
+from redistools.serde import *
+from redistools.dump import *
 
 CONN = Conn()
 # Heat up the redis cache

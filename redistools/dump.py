@@ -3,7 +3,7 @@ import os
 import json
 import datetime
 
-from conn import Conn
+from redistools.conn import Conn
 
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000"))  # size of each key-batch
 DELETE_KEYS = "true" in os.getenv(
@@ -33,6 +33,7 @@ def load_batch(write_function,
     today = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     for match in matches:
         process_raw(match, today, write_function, individual_files)
+    return fns
 
 
 '''
