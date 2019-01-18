@@ -20,7 +20,7 @@ class Conn:
         redishost = os.getenv('REDISHOST', 'localhost')
         redisport = int(os.getenv('REDISPORT', '6379'))
         redispassword = os.getenv('REDISPW', None)
-        redistimeout = float(os.getenv('REDISTIMEOUT', "1.1"))
+        redistimeout = float(os.getenv('REDISTIMEOUT', "5.0"))
         self.slaveonly = "true" in os.getenv("REDIS_SLAVE_ONLY",
                                              "false").lower()
         self.sentinelmaster = os.getenv('SENTINELMASTER')
