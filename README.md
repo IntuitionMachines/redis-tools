@@ -53,7 +53,7 @@ BATCH_SIZE is how many keys to get at once, this is equivalent to COUNT when you
 
 EXPIRE is the TTL for each key (in seconds). This is only used when you want to loop through and output to individual files. The default is set to one day.  
 
-The output files are `${match or key}_${date}.json`. As of right now, the only format outputted is JSON. 
+The output files are `${match}_${key}_${date}.json`. As of right now, the only format outputted is JSON. 
 
 ## Testing
 In order to run the tests, make sure you have a local Redis running.

@@ -65,7 +65,7 @@ def process_raw(match, date, write_function, individual_files):
             for key in keys:
                 fixed_values = get_data(key)  # get each value
                 # dump batch to file and reset dict - expire/delete keys here
-                filename = f'{match}_{date}_{count}.json'
+                filename = f'{match}_{key}_{date}_{count}.json'
                 zip_and_dump(key, fixed_values, filename, write_function)
                 if DELETE_KEYS:
                     if CONN.ttl(key) > EXPIRE:
