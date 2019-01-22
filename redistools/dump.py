@@ -4,6 +4,7 @@ import json
 import datetime
 
 from redistools.conn import Conn
+from redistools.serde import RedisDict, RedisList, RedisSet
 
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000"))  # size of each key-batch
 DELETE_KEYS = "true" in os.getenv(
@@ -83,17 +84,31 @@ def process_raw(match, date, write_function, individual_files):
 
 
 '''
-This function calls mget on all keys given to it, and returns their values
+This function 
 '''
 
 
-def get_data(keys):  # this will take a individual key or a list of keys
+def get_data(keys):  # this will take a individual key and return its values for dumping.
+    if INDIVIDUAL_FILES:
+        key_type = CONN.type(keys).decode('utf-8')
+
+        # switch based on type, utilizing the serde library
+        if "hash" in key_type.lower():
+            values = RedisDict(CONN, keys).get()
+        elif "set" in key_type.lower():
+            values = RedisSet(CONN, keys).get()
+        elif "list" in key_type():
+            values = RedisList(CONN, keys).get()
+        else: 
+            values = CONN.mget(keys)
+    else:
+        values = CONN.mget(keys)
+
     fixed_values = []
-    values = CONN.mget(keys)
     for value in values:
         if not value:
             value = b'{}'  # set value to empty dict
-        fixed_values.append(value.decode('utf-8'))
+        fixed_values.append(value.decode('utf-8')) # decode values
     return fixed_values
 
 
