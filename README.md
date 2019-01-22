@@ -59,6 +59,13 @@ The output files are `${match}_${key}_${date}.json`. As of right now, the only f
 In order to run the tests, make sure you have a local Redis running.
 From there, run ```python3 ./tests/tests.py```
 
+## Docker
+To develop locally:
+Add a folder in the root directory named `redis` and place in a .rdb file.
+From there, simply `docker-compose build`
+Then `docker-compose run -d redis`
+Then export your env vars, and `docker-compose up` to get a shell in the container, and `pip install redis`
+
 Authors:
 
 posix4e and tinkerer.

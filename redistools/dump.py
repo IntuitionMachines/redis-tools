@@ -84,7 +84,7 @@ def process_raw(match, date, write_function, individual_files):
 
 
 '''
-This function 
+This function returns the decoded values as easily strings instead of bytes
 '''
 
 
