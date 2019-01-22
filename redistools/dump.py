@@ -141,3 +141,4 @@ def decode_data(data):
     if isinstance(data, dict): return dict(map(decode_data, data.items()))
     if isinstance(data, list): return list(map(decode_data, data))
     if isinstance(data, set): return set(map(decode_data, data))
+    if isinstance(data, tuple): return tuple(map(decode_data, data))
