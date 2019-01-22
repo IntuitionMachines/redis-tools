@@ -4,6 +4,7 @@ import json
 import datetime
 
 from redistools.conn import Conn
+from redistools.serde import RedisDict, RedisList, RedisSet
 
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "10000"))  # size of each key-batch
 DELETE_KEYS = "true" in os.getenv(
@@ -12,6 +13,7 @@ DELETE_KEYS = "true" in os.getenv(
 INDIVIDUAL_FILES = "true" in os.getenv(
     "INDIVIDUAL_FILES", "false").lower()  # export each key to its own file
 EXPIRE = int(os.getenv("EXPIRE", "86400"))
+DECODE_RESPONSES = "true" in os.getenv("DECODE_RESPONSES", "True") # decode all responses
 
 LOG = logging.getLogger("redis_dump")
 CONN = Conn()
@@ -63,10 +65,12 @@ def process_raw(match, date, write_function, individual_files):
                 if not key == None]  # decode keys, throw out blank keys
         if individual_files:
             for key in keys:
-                fixed_values = get_data(key)  # get each value
+                fixed_values = get_data(key,
+                                        individual_files)  # get each value
                 # dump batch to file and reset dict - expire/delete keys here
                 filename = f'{match}_{key}_{date}_{count}.json'
-                zip_and_dump(key, fixed_values, filename, write_function)
+                zip_and_dump(key, fixed_values, filename, write_function,
+                             individual_files)
                 if DELETE_KEYS:
                     if CONN.ttl(key) > EXPIRE:
                         CONN.expire(
@@ -75,7 +79,8 @@ def process_raw(match, date, write_function, individual_files):
         else:
             fixed_values = get_data(keys)
             filename = f'{match}_{date}_{count}.json'
-            zip_and_dump(keys, fixed_values, filename, write_function)
+            zip_and_dump(keys, fixed_values, filename, write_function,
+                         individual_files)
         # delete on flag
         if DELETE_KEYS:
             CONN.delete(*keys)  # delete keys
@@ -83,18 +88,30 @@ def process_raw(match, date, write_function, individual_files):
 
 
 '''
-This function calls mget on all keys given to it, and returns their values
+This function returns the decoded values as easily strings instead of bytes
 '''
 
 
-def get_data(keys):  # this will take a individual key or a list of keys
-    fixed_values = []
-    values = CONN.mget(keys)
-    for value in values:
-        if not value:
-            value = b'{}'  # set value to empty dict
-        fixed_values.append(value.decode('utf-8'))
-    return fixed_values
+def get_data(keys, individual_files=INDIVIDUAL_FILES):
+    if individual_files:
+        key_type = CONN.type(keys).decode('utf-8')
+
+        # switch based on type, utilizing the serde library
+        if "hash" in key_type.lower():
+            values = RedisDict(CONN, keys).get()
+        elif "set" in key_type.lower():
+            values = RedisSet(CONN, keys).get()
+        elif "list" in key_type():
+            values = RedisList(CONN, keys).get()
+        else:
+            values = CONN.mget(keys)
+    else:
+        values = CONN.mget(keys)
+
+    if not DECODE_RESPONSES:
+        return values
+    
+    return decode_data(values)
 
 
 '''
@@ -102,7 +119,30 @@ helper method for zipping the data, and dumping it to a file.
 '''
 
 
-def zip_and_dump(keys, values, filename, write_function):
-    data = {}
-    data.update(dict(zip(keys, values)))
+def zip_and_dump(keys,
+                 values,
+                 filename,
+                 write_function,
+                 indvidual_files=INDIVIDUAL_FILES):
+    if not indvidual_files:
+        data = {}
+        data.update(dict(zip(keys, values)))
+    else:
+        data = values
     dump_to_file(data, filename, write_function)
+
+
+'''
+helper method for returning the data not as bytes for strings, dicts, lists, and sets
+TODO: implent other functionality for what may be returned from redis
+'''
+
+
+def decode_data(data):
+    # if it just a string, map it and decode it
+    if isinstance(data, bytes): return data.decode('utf-8')
+    # map it and decode it if it is not just a string
+    if isinstance(data, dict): return dict(map(decode_data, data.items()))
+    if isinstance(data, list): return list(map(decode_data, data))
+    if isinstance(data, set): return set(map(decode_data, data))
+    if isinstance(data, tuple): return tuple(map(decode_data, data))

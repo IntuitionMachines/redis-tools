@@ -1,0 +1,6 @@
+#!/bin/bash
+set -exu
+
+docker-compose kill  -s term
+yes | docker-compose rm -fsv
+docker network prune -f

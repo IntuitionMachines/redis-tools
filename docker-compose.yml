@@ -8,3 +8,10 @@ services:
     build: .
     image: python:3-alpine
     command: ["./bin/lint"]
+  redis:
+    command: redis-server --dbfilename 'redis.rdb'
+    image: redis:3-alpine
+    volumes: 
+      - ./redis/:/data
+    ports:
+      - 6379:6379 

@@ -41,8 +41,8 @@ class Conn:
                 port=redisport,
                 password=redispassword,
                 db=0,
-                decode_responses=False,
                 socket_timeout=redistimeout,
+                decode_responses=False,
                 ssl_cert_reqs=None,
                 ssl=redissl)
 
