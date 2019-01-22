@@ -64,10 +64,12 @@ def process_raw(match, date, write_function, individual_files):
                 if not key == None]  # decode keys, throw out blank keys
         if individual_files:
             for key in keys:
-                fixed_values = get_data(key)  # get each value
+                fixed_values = get_data(key,
+                                        individual_files)  # get each value
                 # dump batch to file and reset dict - expire/delete keys here
                 filename = f'{match}_{key}_{date}_{count}.json'
-                zip_and_dump(key, fixed_values, filename, write_function)
+                zip_and_dump(key, fixed_values, filename, write_function,
+                             individual_files)
                 if DELETE_KEYS:
                     if CONN.ttl(key) > EXPIRE:
                         CONN.expire(
@@ -76,7 +78,8 @@ def process_raw(match, date, write_function, individual_files):
         else:
             fixed_values = get_data(keys)
             filename = f'{match}_{date}_{count}.json'
-            zip_and_dump(keys, fixed_values, filename, write_function)
+            zip_and_dump(keys, fixed_values, filename, write_function,
+                         individual_files)
         # delete on flag
         if DELETE_KEYS:
             CONN.delete(*keys)  # delete keys
@@ -88,8 +91,8 @@ This function returns the decoded values as easily strings instead of bytes
 '''
 
 
-def get_data(keys):
-    if INDIVIDUAL_FILES:
+def get_data(keys, individual_files=INDIVIDUAL_FILES):
+    if individual_files:
         key_type = CONN.type(keys).decode('utf-8')
 
         # switch based on type, utilizing the serde library
@@ -112,9 +115,16 @@ helper method for zipping the data, and dumping it to a file.
 '''
 
 
-def zip_and_dump(keys, values, filename, write_function):
-    data = {}
-    data.update(dict(zip(keys, values)))
+def zip_and_dump(keys,
+                 values,
+                 filename,
+                 write_function,
+                 indvidual_files=INDIVIDUAL_FILES):
+    if not indvidual_files:
+        data = {}
+        data.update(dict(zip(keys, values)))
+    else:
+        data = values
     dump_to_file(data, filename, write_function)
 
 
