@@ -136,7 +136,7 @@ TODO: implent other functionality for what may be returned from redis
 
 def decode_data(data):
     # if it just a string, map it and decode it
-    if isinstance(data, bytes): return data.decode()
+    if isinstance(data, bytes): return data.decode('utf-8')
     # map it and decode it if it is not just a string
     if isinstance(data, dict): return dict(map(decode_data, data.items()))
     if isinstance(data, list): return list(map(decode_data, data))
