@@ -121,3 +121,16 @@ def zip_and_dump(keys, values, filename, write_function):
     data = {}
     data.update(dict(zip(keys, values)))
     dump_to_file(data, filename, write_function)
+
+'''
+helper method for returning the data not as bytes for strings, dicts, lists, and sets
+TODO: implent other functionality for what may be returned from redis
+'''
+
+def decode_data(data):
+    # if it just a string, map it and decode it
+    if isinstance(data, bytes): return data.decode()
+    # map it and decode it if it is not just a string
+    if isinstance(data, dict): return dict(map(decode_data, data.items())) 
+    if isinstance(data, list): return list(map(decode_data, data))
+    if isinstance(data, set): return set(map(decode_data, data))
