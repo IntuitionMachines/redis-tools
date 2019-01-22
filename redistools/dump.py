@@ -88,7 +88,7 @@ This function
 '''
 
 
-def get_data(keys):  # this will take a individual key and return its values for dumping.
+def get_data(keys):
     if INDIVIDUAL_FILES:
         key_type = CONN.type(keys).decode('utf-8')
 
@@ -99,17 +99,12 @@ def get_data(keys):  # this will take a individual key and return its values for
             values = RedisSet(CONN, keys).get()
         elif "list" in key_type():
             values = RedisList(CONN, keys).get()
-        else: 
+        else:
             values = CONN.mget(keys)
     else:
         values = CONN.mget(keys)
 
-    fixed_values = []
-    for value in values:
-        if not value:
-            value = b'{}'  # set value to empty dict
-        fixed_values.append(value.decode('utf-8')) # decode values
-    return fixed_values
+    return decode_data(values)
 
 
 '''
@@ -122,15 +117,17 @@ def zip_and_dump(keys, values, filename, write_function):
     data.update(dict(zip(keys, values)))
     dump_to_file(data, filename, write_function)
 
+
 '''
 helper method for returning the data not as bytes for strings, dicts, lists, and sets
 TODO: implent other functionality for what may be returned from redis
 '''
 
+
 def decode_data(data):
     # if it just a string, map it and decode it
     if isinstance(data, bytes): return data.decode()
     # map it and decode it if it is not just a string
-    if isinstance(data, dict): return dict(map(decode_data, data.items())) 
+    if isinstance(data, dict): return dict(map(decode_data, data.items()))
     if isinstance(data, list): return list(map(decode_data, data))
     if isinstance(data, set): return set(map(decode_data, data))

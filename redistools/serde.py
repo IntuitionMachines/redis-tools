@@ -1,7 +1,7 @@
 '''
 Classes for serializing and deserializing redis data into json
 '''
-import bson # for easy encoding and decoding from bytes to strings
+
 
 class RedisDict():
     '''
@@ -33,9 +33,6 @@ class RedisDict():
 
     def add_items(self, items):
         self.conn.hmset(self.key, items)
-        
-
-
 
 
 class RedisList():
