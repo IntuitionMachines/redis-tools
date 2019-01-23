@@ -62,6 +62,7 @@ def process_raw(match, date, write_function):
             count=BATCH_SIZE)  # match the keys we want to grab
         keys = [key.decode('utf-8') for key in keys
                 if not key == None]  # decode keys, throw out blank keys
+        filename = f'{date}/{keys[0]}_{count}.json'
         if INDIVIDUAL_FILES:
             data = {}
             for key in keys:
@@ -72,7 +73,6 @@ def process_raw(match, date, write_function):
                             key
                         )  # only set expire if it is greater than the EXPIRE time.
             # dump batch to file and reset dict - expire/delete keys here
-            filename = f'{date}/{keys[0]}_{count}.json'
             zip_and_dump(key, data, filename, write_function)
         else:
             fixed_values = get_data(keys)
