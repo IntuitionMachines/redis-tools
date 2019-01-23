@@ -16,6 +16,7 @@ RUN sed -i 's/archive/us-west-2\.ec2\.archive/' /etc/apk/repositories \
 
 COPY requirements.txt /work
 RUN pip install -r requirements.txt
+RUN pip install redis
 
 COPY bin /work/bin/
 COPY *.py /work/

@@ -1,6 +1,13 @@
 # redis-tools
 A set of Redis wrappers for transparent cluster scale-out and backing store abstraction.
 
+Install the latest version of redis-tools like so:
+```bash
+pip install git++https://github.com/IntuitionMachines/redis-tools.git#egg=redistools
+```
+or add it to your requirements.txt
+
+## Legacy
 You can install this package like so:
 
 ```bash
@@ -36,7 +43,7 @@ To use the dump, simply pass it a write function, and a list of the keys you wis
 ```python
 from redistools.dump import dump
 
-load_batch(file_dump.write, matches, individual_files=True)
+load_batch(file_dump.write, matches)
 ```
 
 Uses the following enviroment variables:
@@ -68,11 +75,11 @@ To develop locally:
 Add a folder in the root directory named `redis` and place in a .rdb file.
 From there, simply `docker-compose build`
 Then `docker-compose run -d redis`
-Then export your env vars, and `docker-compose up` to get a shell in the container, and `pip install redis`
+Then export your env vars, and `docker-compose up` to get a shell in the container.
 
 Authors:
 
-posix4e and tinkerer.
+posix4e, tinkerer, and alikoneko.
 
 (C) 2018 hCaptcha.
 
