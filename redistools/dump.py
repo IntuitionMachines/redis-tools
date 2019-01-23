@@ -54,7 +54,7 @@ Function that processes the data and makes the file names
 '''
 
 
-def process_raw(match, name, date, write_function):
+def process_raw(match, date, write_function):
     count = 0
     cursor = '0'
     while cursor != 0:
