@@ -8,3 +8,6 @@ build/**
 *.pyc
 */__pycache__/
 .mypy_cache/
+/redis
+.vscode
+.git

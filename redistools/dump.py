@@ -13,7 +13,8 @@ DELETE_KEYS = "true" in os.getenv(
 INDIVIDUAL_FILES = "true" in os.getenv(
     "INDIVIDUAL_FILES", "false").lower()  # export each key to its own file
 EXPIRE = int(os.getenv("EXPIRE", "86400"))
-DECODE_RESPONSES = "true" in os.getenv("DECODE_RESPONSES", "True").lower() # decode all responses
+DECODE_RESPONSES = "true" in os.getenv("DECODE_RESPONSES",
+                                       "True").lower()  # decode all responses
 
 LOG = logging.getLogger("redis_dump")
 CONN = Conn()
@@ -110,7 +111,7 @@ def get_data(keys, individual_files=INDIVIDUAL_FILES):
 
     if not DECODE_RESPONSES:
         return values
-    
+
     return decode_data(values)
 
 

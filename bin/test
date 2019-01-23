@@ -1,0 +1,13 @@
+#!/bin/bash
+set -exu
+cd "$(dirname "$0")"/..
+
+export ARGS=${ARGS:-'-s -v --no-deprecated --with-coverage --cover-xml --cover-xml-file=/vol/coverage/coverage.xml --cover-html --cover-html-dir=/vol/coverage --with-xunit --xunit-file=/vol/testresults.xml --cover-package=./ --cover-inclusive'}
+export PYTHONPATH=/work
+
+
+default_tests=`find tests -type f -name '*.py' ! -path "./venv/*" ! -path "./*/venv/*" ! -path "./src/*"`
+
+TESTS=${*-$default_tests}
+export NOSE="nosetests"
+${NOSE} ${ARGS} ${TESTS}

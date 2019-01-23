@@ -1,22 +1,18 @@
-FROM python:3-alpine
+FROM python:3.7.2-alpine3.7
 
 WORKDIR /work
-VOLUME ["/vol"]
 
 # Redis for testing
 ENV REDISHOST "redis"
 ENV REDIS_SSL "False"
 
 # Install all the common components early on in the process to leverage docker layer caching
-RUN sed -i 's/archive/us-west-2\.ec2\.archive/' /etc/apk/repositories \
- && apk update  \
- && apk add libc-dev gcc jq git curl bash \
- && apk add python-dev \
- && apk add py-pip 
+RUN apk --update add jq git curl bash py3-pip python3-dev gcc libc-dev
 
 COPY requirements.txt /work
 RUN pip install -r requirements.txt
 
 COPY bin /work/bin/
-COPY *.py /work/
+COPY redistools /work/redistools
+COPY tests /work/tests
 CMD bash
