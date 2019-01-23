@@ -54,7 +54,7 @@ Function that processes the data and makes the file names
 '''
 
 
-def process_raw(match, date, write_function):
+def process_raw(match, name, date, write_function):
     count = 0
     cursor = '0'
     while cursor != 0:
@@ -67,14 +67,14 @@ def process_raw(match, date, write_function):
             data = {}
             for key in keys:
                 data[key] = get_data(key)  # get each value & append 
-                # dump batch to file and reset dict - expire/delete keys here
-                filename = f'{match}_{key}_{date}_{count}.json'
-                zip_and_dump(key, data, filename, write_function)
                 if DELETE_KEYS:
                     if CONN.ttl(key) > EXPIRE:
                         CONN.expire(
                             key
                         )  # only set expire if it is greater than the EXPIRE time.
+            # dump batch to file and reset dict - expire/delete keys here
+            filename = f'{match}_{date}_{count}.json'
+            zip_and_dump(key, data, filename, write_function)
         else:
             fixed_values = get_data(keys)
             filename = f'{match}_{date}_{count}.json'
