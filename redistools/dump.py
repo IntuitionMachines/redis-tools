@@ -72,7 +72,7 @@ def process_raw(match, date, write_function):
                             key
                         )  # only set expire if it is greater than the EXPIRE time.
             # dump batch to file and reset dict - expire/delete keys here
-            filename = f'{date}/{key}_{count}.json'
+            filename = f'{date}/{keys[0].first}_{count}.json'
             zip_and_dump(key, data, filename, write_function)
         else:
             fixed_values = get_data(keys)
