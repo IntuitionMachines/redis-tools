@@ -13,7 +13,8 @@ DELETE_KEYS = "true" in os.getenv(
 INDIVIDUAL_FILES = "true" in os.getenv(
     "INDIVIDUAL_FILES", "false").lower()  # export each key to its own file
 EXPIRE = int(os.getenv("EXPIRE", "86400"))
-DECODE_RESPONSES = "true" in os.getenv("DECODE_RESPONSES", "True").lower() # decode all responses
+DECODE_RESPONSES = "true" in os.getenv("DECODE_RESPONSES",
+                                       "True").lower()  # decode all responses
 INDIVIDUAL_FILES = "true" in os.getenv("INDIVIDUAL_FILES", "True").lower()
 
 LOG = logging.getLogger("redis_dump")
@@ -29,9 +30,7 @@ a json format
 '''
 
 
-def load_batch(write_function,
-               matches,
-               batch=BATCH_SIZE):
+def load_batch(write_function, matches, batch=BATCH_SIZE):
     today = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     for match in matches:
         process_raw(match, today, write_function)
@@ -66,7 +65,7 @@ def process_raw(match, date, write_function):
         if INDIVIDUAL_FILES:
             data = {}
             for key in keys:
-                data[key] = get_data(key)  # get each value & append 
+                data[key] = get_data(key)  # get each value & append
                 if DELETE_KEYS:
                     if CONN.ttl(key) > EXPIRE:
                         CONN.expire(
@@ -108,7 +107,7 @@ def get_data(keys):
 
     if not DECODE_RESPONSES:
         return values
-    
+
     return decode_data(values)
 
 
@@ -117,10 +116,7 @@ helper method for zipping the data, and dumping it to a file.
 '''
 
 
-def zip_and_dump(keys,
-                 values,
-                 filename,
-                 write_function):
+def zip_and_dump(keys, values, filename, write_function):
     if not INDIVIDUAL_FILES:
         data = {}
         data.update(dict(zip(keys, values)))
