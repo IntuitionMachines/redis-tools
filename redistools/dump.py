@@ -101,7 +101,7 @@ def get_data(keys, individual_files=INDIVIDUAL_FILES):
             values = RedisDict(CONN, keys).get()
         elif "set" in key_type.lower():
             values = RedisSet(CONN, keys).get()
-        elif "list" in key_type():
+        elif "list" in key_type.lower():
             values = RedisList(CONN, keys).get()
         else:
             values = CONN.mget(keys)
