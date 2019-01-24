@@ -14,8 +14,7 @@ INDIVIDUAL_FILES = "true" in os.getenv(
     "INDIVIDUAL_FILES", "false").lower()  # export each key to its own file
 EXPIRE = int(os.getenv("EXPIRE", "86400"))
 DECODE_RESPONSES = "true" in os.getenv("DECODE_RESPONSES",
-                                       "True").lower()  # decode all responses
-INDIVIDUAL_FILES = "true" in os.getenv("INDIVIDUAL_FILES", "True").lower()
+                                       "True").lower()  # decode all response
 
 LOG = logging.getLogger("redis_dump")
 CONN = Conn()

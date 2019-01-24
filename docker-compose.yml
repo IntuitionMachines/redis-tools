@@ -4,10 +4,8 @@ services:
   redistools:
     build: .
     command: ["bash"]
-  lint:
-    build: .
-    image: python:3-alpine
-    command: ["./bin/lint"]
+    links:
+      - redis 
   redis:
     command: redis-server --dbfilename 'redis.rdb'
     image: redis:3-alpine
