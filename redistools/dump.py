@@ -63,16 +63,15 @@ def process_raw(match, date, write_function):
                 if not key == None]  # decode keys, throw out blank keys
         if INDIVIDUAL_FILES:
             for key in keys:
-                data = {}
-                data[key] = get_data(key)  # get each value & append
+                filename = f'{date}/{key}.json'
+                # dump batch to file and reset dict - expire/delete keys here
+                zip_and_dump(key, get_data(key), filename,
+                             write_function)  # get each value & append
                 if DELETE_KEYS:
                     if CONN.ttl(key) > EXPIRE:
                         CONN.expire(
                             key
                         )  # only set expire if it is greater than the EXPIRE time.
-                filename = f'{date}/{key}.json'
-                # dump batch to file and reset dict - expire/delete keys here
-                zip_and_dump(key, data, filename, write_function)
         else:
             fixed_values = get_data(keys)
             filename = f'{match}_{date}.json'
