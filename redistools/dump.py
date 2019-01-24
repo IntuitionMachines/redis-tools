@@ -14,7 +14,7 @@ INDIVIDUAL_FILES = "true" in os.getenv(
     "INDIVIDUAL_FILES", "false").lower()  # export each key to its own file
 EXPIRE = int(os.getenv("EXPIRE", "86400"))
 DECODE_RESPONSES = "true" in os.getenv("DECODE_RESPONSES",
-                                       "True").lower()  # decode all responses
+                                       "True").lower()  # decode all response
 
 LOG = logging.getLogger("redis_dump")
 CONN = Conn()
@@ -29,13 +29,10 @@ a json format
 '''
 
 
-def load_batch(write_function,
-               matches,
-               batch=BATCH_SIZE,
-               individual_files=INDIVIDUAL_FILES):
+def load_batch(write_function, matches, batch=BATCH_SIZE):
     today = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     for match in matches:
-        process_raw(match, today, write_function, individual_files)
+        process_raw(match, today, write_function)
     return fns
 
 
@@ -55,7 +52,7 @@ Function that processes the data and makes the file names
 '''
 
 
-def process_raw(match, date, write_function, individual_files):
+def process_raw(match, date, write_function):
     count = 0
     cursor = '0'
     while cursor != 0:
@@ -64,24 +61,22 @@ def process_raw(match, date, write_function, individual_files):
             count=BATCH_SIZE)  # match the keys we want to grab
         keys = [key.decode('utf-8') for key in keys
                 if not key == None]  # decode keys, throw out blank keys
-        if individual_files:
+        if INDIVIDUAL_FILES:
+            data = {}
             for key in keys:
-                fixed_values = get_data(key,
-                                        individual_files)  # get each value
-                # dump batch to file and reset dict - expire/delete keys here
-                filename = f'{match}_{key}_{date}_{count}.json'
-                zip_and_dump(key, fixed_values, filename, write_function,
-                             individual_files)
+                data[key] = get_data(key)  # get each value & append
                 if DELETE_KEYS:
                     if CONN.ttl(key) > EXPIRE:
                         CONN.expire(
                             key
                         )  # only set expire if it is greater than the EXPIRE time.
+                filename = f'{date}/{key}_{count}.json'
+                # dump batch to file and reset dict - expire/delete keys here
+                zip_and_dump(key, data, filename, write_function)
         else:
             fixed_values = get_data(keys)
             filename = f'{match}_{date}_{count}.json'
-            zip_and_dump(keys, fixed_values, filename, write_function,
-                         individual_files)
+            zip_and_dump(keys, fixed_values, filename, write_function)
         # delete on flag
         if DELETE_KEYS:
             CONN.delete(*keys)  # delete keys
@@ -93,8 +88,8 @@ This function returns the decoded values as easily strings instead of bytes
 '''
 
 
-def get_data(keys, individual_files=INDIVIDUAL_FILES):
-    if individual_files:
+def get_data(keys):
+    if INDIVIDUAL_FILES:
         key_type = CONN.type(keys).decode('utf-8')
 
         # switch based on type, utilizing the serde library
@@ -102,7 +97,7 @@ def get_data(keys, individual_files=INDIVIDUAL_FILES):
             values = RedisDict(CONN, keys).get()
         elif "set" in key_type.lower():
             values = RedisSet(CONN, keys).get()
-        elif "list" in key_type():
+        elif "list" in key_type.lower():
             values = RedisList(CONN, keys).get()
         else:
             values = CONN.mget(keys)
@@ -120,12 +115,8 @@ helper method for zipping the data, and dumping it to a file.
 '''
 
 
-def zip_and_dump(keys,
-                 values,
-                 filename,
-                 write_function,
-                 indvidual_files=INDIVIDUAL_FILES):
-    if not indvidual_files:
+def zip_and_dump(keys, values, filename, write_function):
+    if not INDIVIDUAL_FILES:
         data = {}
         data.update(dict(zip(keys, values)))
     else:

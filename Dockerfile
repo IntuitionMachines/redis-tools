@@ -11,6 +11,7 @@ RUN apk --update add jq git curl bash py3-pip python3-dev gcc libc-dev
 
 COPY requirements.txt /work
 RUN pip install -r requirements.txt
+RUN pip install redis
 
 COPY bin /work/bin/
 COPY redistools /work/redistools
