@@ -62,8 +62,8 @@ def process_raw(match, date, write_function):
         keys = [key.decode('utf-8') for key in keys
                 if not key == None]  # decode keys, throw out blank keys
         if INDIVIDUAL_FILES:
-            data = {}
             for key in keys:
+                data = {}
                 data[key] = get_data(key)  # get each value & append
                 if DELETE_KEYS:
                     if CONN.ttl(key) > EXPIRE:
@@ -75,7 +75,7 @@ def process_raw(match, date, write_function):
                 zip_and_dump(key, data, filename, write_function)
         else:
             fixed_values = get_data(keys)
-            filename = f'{match}_{date}_{count}.json'
+            filename = f'{match}_{date}.json'
             zip_and_dump(keys, fixed_values, filename, write_function)
         # delete on flag
         if DELETE_KEYS:
