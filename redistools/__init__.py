@@ -6,7 +6,6 @@ redis-helpers library
 import os
 from redistools.conn import Conn
 from redistools.serde import RedisDict, RedisList, RedisSet
-from redistools.dump import load_batch
 
 CONN = Conn()
 # Heat up the redis cache
