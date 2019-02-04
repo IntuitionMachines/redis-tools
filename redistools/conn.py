@@ -71,8 +71,16 @@ class Conn:
         def handlerFunc(*args, **kwargs):
             if TRACE:
                 stack = inspect.stack()
+                if len(stack) > 1:
+                    frame = stack[1]
+                else:
+                    frame = stack[-1]
+                if frame.code_context and len(frame.code_context):
+                    context = frame.code_context[0].strip()
+                else:
+                    context = None
                 logger_function(
-                    f'REDIS: file {stack[-1].filename} at line {stack[-1].lineno} called {name} with {args} and {kwargs}'
+                    f'{frame.filename}:{frame.lineno} in {frame.function} called "{name}" with {args}, {kwargs} via "{context}"'
                 )
             if name.upper() in SLAVEABLE_FUNCS:
                 return getattr(self.get_slave(), name)(*args, **kwargs)
