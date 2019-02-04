@@ -80,7 +80,7 @@ class Conn:
                 else:
                     context = None
                 logger_function(
-                    f'{frame.filename}:{frame.lineno} in {frame.function} called {name} with {args}, {kwargs} via "{context}"'
+                    f'{frame.filename}:{frame.lineno} in {frame.function} called "{name}" with {args}, {kwargs} via "{context}"'
                 )
             if name.upper() in SLAVEABLE_FUNCS:
                 return getattr(self.get_slave(), name)(*args, **kwargs)
