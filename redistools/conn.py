@@ -2,6 +2,15 @@ import os
 from redis import StrictRedis
 from redis.sentinel import Sentinel
 
+TRACE = os.getenv('TRACE_REDIS', 'false').lower() == "true"
+
+if TRACE:
+    import inspect
+    import logging
+    logger = logging.getLogger('redisutils')
+    logger.setLevel(logging.DEBUG)
+    logger_function = logger.debug
+
 SLAVEABLE_FUNCS = [
     "DBSIZE", "DEBUG", "GET", "GETBIT", "GETRANGE", "HGET", "HGETALL", "HKEYS",
     "HLEN", "HMGET", "HVALS", "INFO", "LASTSAVE", "LINDEX", "LLEN", "LRANGE",
@@ -60,6 +69,11 @@ class Conn:
 
     def __getattr__(self, name):
         def handlerFunc(*args, **kwargs):
+            if TRACE:
+                stack = inspect.stack()
+                logger_function(
+                    f'REDIS: file {stack[-1].filename} at line {stack[-1].lineno} called {name} with {args} and {kwargs}'
+                )
             if name.upper() in SLAVEABLE_FUNCS:
                 return getattr(self.get_slave(), name)(*args, **kwargs)
             else:
