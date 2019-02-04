@@ -2,7 +2,7 @@ import os
 from redis import StrictRedis
 from redis.sentinel import Sentinel
 
-TRACE = os.getenv('TRACE_REDIS', 'false') == "true"
+TRACE = os.getenv('TRACE_REDIS', 'false').lower() == "true"
 
 if TRACE:
     import inspect
