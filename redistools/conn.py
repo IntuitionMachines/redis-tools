@@ -6,7 +6,10 @@ TRACE = os.getenv('TRACE_REDIS', 'false').lower() == "true"
 
 if TRACE:
     import inspect
-    logger_function = print
+    import logging
+    logger = logging.getLogger('redisutils')
+    logger.setLevel(logging.DEBUG)
+    logger_function = logger.debug
 
 SLAVEABLE_FUNCS = [
     "DBSIZE", "DEBUG", "GET", "GETBIT", "GETRANGE", "HGET", "HGETALL", "HKEYS",
