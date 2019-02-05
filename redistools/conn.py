@@ -86,14 +86,14 @@ class Conn:
                     context = frame.code_context[0].strip()
                 else:
                     context = None
-                    machine_readable_stack_frame = dict(
-                        filename=frame.filename,
-                        lineno=frame.lineno,
-                        function=frame.function,
-                        redis_verb=name,
-                        args=args,
-                        kwargs=kwargs,
-                        context=context)
+                machine_readable_stack_frame = dict(
+                    filename=frame.filename,
+                    lineno=frame.lineno,
+                    function=frame.function,
+                    redis_verb=name,
+                    args=args,
+                    kwargs=kwargs,
+                    context=context)
                 logger_function(json.dumps(machine_readable_stack_frame))
             if name.upper() in SLAVEABLE_FUNCS:
                 return getattr(self.get_slave(), name)(*args, **kwargs)
