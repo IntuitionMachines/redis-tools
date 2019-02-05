@@ -99,7 +99,8 @@ class Conn:
                 try:
                     logger_function(json.dumps(machine_readable_stack_frame))
                 except TypeError:
-                    logger_function("JSON SERIALIZATION FAILED: " + str(machine_readable_stack_frame))
+                    logger_function("JSON SERIALIZATION FAILED: " +
+                                    str(machine_readable_stack_frame))
             if name.upper() in SLAVEABLE_FUNCS:
                 return getattr(self.get_slave(), name)(*args, **kwargs)
             else:
