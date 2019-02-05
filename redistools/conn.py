@@ -2,11 +2,12 @@ import os
 from redis import StrictRedis
 from redis.sentinel import Sentinel
 
-TRACE = os.getenv('TRACE_REDIS', 'false').lower() == "true"
+TRACE = os.getenv('REDISTRACE', 'false').lower() == "true"
 
 if TRACE:
     import inspect
     import logging
+    import json
     logger = logging.getLogger('redisutils')
     logger.setLevel(logging.DEBUG)
     logger_function = logger.debug
@@ -71,17 +72,31 @@ class Conn:
         def handlerFunc(*args, **kwargs):
             if TRACE:
                 stack = inspect.stack()
+                frame_index = 0
                 if len(stack) > 1:
-                    frame = stack[1]
-                else:
-                    frame = stack[-1]
+                    frame_index += 1
+                frame = stack[frame_index]
+                while 'redistools' in stack[frame_index].filename:
+                    if frame_index < len(stack):
+                        frame_index += 1
+                        frame = stack[frame_index]
+                    else:
+                        break
                 if frame.code_context and len(frame.code_context):
                     context = frame.code_context[0].strip()
                 else:
                     context = None
-                logger_function(
-                    f'{frame.filename}:{frame.lineno} in {frame.function} called "{name}" with {args}, {kwargs} via "{context}"'
-                )
+                machine_readable_stack_frame = dict(
+                    filename=frame.filename,
+                    lineno=frame.lineno,
+                    function=frame.function,
+                    redis_verb=name,
+                    args=[
+                        a.decode() if isinstance(a, bytes) else a for a in args
+                    ],
+                    kwargs=kwargs,
+                    context=context)
+                logger_function(json.dumps(machine_readable_stack_frame))
             if name.upper() in SLAVEABLE_FUNCS:
                 return getattr(self.get_slave(), name)(*args, **kwargs)
             else:
