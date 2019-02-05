@@ -96,7 +96,10 @@ class Conn:
                     ],
                     kwargs=kwargs,
                     context=context)
-                logger_function(json.dumps(machine_readable_stack_frame))
+                try:
+                    logger_function(json.dumps(machine_readable_stack_frame))
+                except:
+                    logger_function("JSON SERIALIZATION FAILED: " + str(machine_readable_stack_frame))
             if name.upper() in SLAVEABLE_FUNCS:
                 return getattr(self.get_slave(), name)(*args, **kwargs)
             else:
