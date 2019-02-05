@@ -71,10 +71,13 @@ class Conn:
         def handlerFunc(*args, **kwargs):
             if TRACE:
                 stack = inspect.stack()
+                frame_index = 0
                 if len(stack) > 1:
-                    frame = stack[1]
-                else:
-                    frame = stack[-1]
+                    frame_index += 1
+                frame = stack[stack_index]
+                while 'redistools' in stack[stack_index].filename:
+                    frame_index += 1
+                    frame = stack[stack_index]
                 if frame.code_context and len(frame.code_context):
                     context = frame.code_context[0].strip()
                 else:
