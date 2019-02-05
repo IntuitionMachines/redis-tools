@@ -9,6 +9,8 @@ if TRACE:
     import logging
     logger = logging.getLogger('redisutils')
     logger.setLevel(logging.DEBUG)
+    if not len(logger.handlers):
+        logger.addHandler(logging.StreamHandler())
     logger_function = logger.debug
 
 SLAVEABLE_FUNCS = [
@@ -74,10 +76,13 @@ class Conn:
                 frame_index = 0
                 if len(stack) > 1:
                     frame_index += 1
-                frame = stack[stack_index]
-                while 'redistools' in stack[stack_index].filename:
-                    frame_index += 1
-                    frame = stack[stack_index]
+                frame = stack[frame_index]
+                while 'redistools' in stack[frame_index].filename:
+                    if frame_index < len(stack):
+                        frame_index += 1
+                        frame = stack[frame_index]
+                    else:
+                        break
                 if frame.code_context and len(frame.code_context):
                     context = frame.code_context[0].strip()
                 else:
