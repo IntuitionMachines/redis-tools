@@ -9,8 +9,6 @@ if TRACE:
     import logging
     logger = logging.getLogger('redisutils')
     logger.setLevel(logging.DEBUG)
-    if not len(logger.handlers):
-        logger.addHandler(logging.StreamHandler())
     logger_function = logger.debug
 
 SLAVEABLE_FUNCS = [
