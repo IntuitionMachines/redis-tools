@@ -91,7 +91,9 @@ class Conn:
                     lineno=frame.lineno,
                     function=frame.function,
                     redis_verb=name,
-                    args=[a.decode() if isinstance(a, bytes) else a for a in args],
+                    args=[
+                        a.decode() if isinstance(a, bytes) else a for a in args
+                    ],
                     kwargs=kwargs,
                     context=context)
                 logger_function(json.dumps(machine_readable_stack_frame))
