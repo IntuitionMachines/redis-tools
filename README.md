@@ -3,7 +3,7 @@ A set of Redis wrappers for transparent cluster scale-out and backing store abst
 
 Install the latest version of redis-tools like so:
 ```bash
-pip install git++https://github.com/IntuitionMachines/redis-tools.git#egg=redistools
+pip install git+https://github.com/IntuitionMachines/redis-tools.git#egg=redistools
 ```
 or add it to your requirements.txt
 
