@@ -123,6 +123,9 @@ class RedisList():
     def __repr__(self):
         return repr(self.conn.lrange(self.key, 0, -1))
 
+    def __iter__(self):
+        return iter(self.conn.lrange(self.key, 0, -1))
+
     def __getitem__(self, id):
         if isinstance(id, slice):
             return self.conn.lrange(self.key, id.start, id.stop)
