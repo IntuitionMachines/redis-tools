@@ -2,11 +2,11 @@
 Classes for serializing and deserializing redis data into json
 '''
 import redistools
-
+from redistools.conn import Conn
 
 class RedisUtils:
-    def __init__(self):
-        self.conn = redistools.CONN
+    def __init__(self, **kwargs):
+        self.conn = Conn(**kwargs)
         self.ex = 604800
 
     def keys(self, filter=""):

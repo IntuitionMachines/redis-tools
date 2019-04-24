@@ -26,19 +26,33 @@ class Conn:
     simple abstraction class to transparently split redis master/slave read+write operations for scaling out e.g. redis-sentinel clusters.
     '''
 
-    def __init__(self):
+    def __init__(self, host=None, port=None, pw=None, timeout=None, slaveonly=None, ssl=None):        
         redishost = os.getenv('REDISHOST', 'localhost')
+        if host != None:
+            redishost = host
+        self.host = redishost
         redisport = int(os.getenv('REDISPORT', '6379'))
+        if port != None:
+            redisport = port
+        self.port = redisport
         redispassword = os.getenv('REDISPW', None)
+        if pw != None:
+            redispassword = pw
         redistimeout = float(os.getenv('REDISTIMEOUT', "5.0"))
+        if timeout != None:
+            redistimeout = timeout
         self.slaveonly = "true" in os.getenv("REDIS_SLAVE_ONLY",
                                              "false").lower()
+        if slaveonly != None:
+            self.slaveonly = slaveonly
         self.sentinelmaster = os.getenv('SENTINELMASTER')
 
         if redishost is "localhost":
             redissl = "true" in os.getenv('REDIS_SSL', 'False').lower()
         else:
             redissl = "true" in os.getenv('REDIS_SSL', 'True').lower()
+        if ssl != None:
+            redisssl = ssl
 
         if self.sentinelmaster:
             self.conn = Sentinel([(redishost, redisport)],
@@ -55,7 +69,9 @@ class Conn:
                 decode_responses=False,
                 ssl_cert_reqs=None,
                 ssl=redissl)
-
+        #Heat up the redis cache
+        if "true" in os.getenv("PREPING", 'false').lower():
+            self.conn.ping()
     def get_master(self):
         if self.sentinelmaster:
             return self.conn.master_for(self.sentinelmaster)
