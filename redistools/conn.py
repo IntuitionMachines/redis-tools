@@ -48,9 +48,9 @@ class Conn:
         self.sentinelmaster = os.getenv('SENTINELMASTER')
 
         if redishost is "localhost":
-            redissl = "true" in os.getenv('REDIS_SSL', 'False').lower()
+            redisssl = "true" in os.getenv('REDIS_SSL', 'False').lower()
         else:
-            redissl = "true" in os.getenv('REDIS_SSL', 'True').lower()
+            redisssl = "true" in os.getenv('REDIS_SSL', 'True').lower()
         if ssl != None:
             redisssl = ssl
 
@@ -58,7 +58,7 @@ class Conn:
             self.conn = Sentinel([(redishost, redisport)],
                                  password=redispassword,
                                  socket_timeout=redistimeout,
-                                 ssl=redissl)
+                                 ssl=redisssl)
         else:
             self.conn = StrictRedis(
                 host=redishost,
@@ -68,7 +68,7 @@ class Conn:
                 socket_timeout=redistimeout,
                 decode_responses=False,
                 ssl_cert_reqs=None,
-                ssl=redissl)
+                ssl=redisssl)
         #Heat up the redis cache
         if "true" in os.getenv("PREPING", 'false').lower():
             self.conn.ping()
