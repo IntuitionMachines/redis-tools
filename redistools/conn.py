@@ -66,6 +66,8 @@ class Conn:
                 password=redispassword,
                 db=0,
                 socket_timeout=redistimeout,
+                socket_keepalive=True,
+                retry_on_timeout=True,
                 decode_responses=False,
                 ssl_cert_reqs=None,
                 ssl=redisssl)
