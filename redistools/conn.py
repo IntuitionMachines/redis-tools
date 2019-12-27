@@ -25,8 +25,13 @@ class Conn:
     '''
     simple abstraction class to transparently split redis master/slave read+write operations for scaling out e.g. redis-sentinel clusters.
     '''
-
-    def __init__(self, host=None, port=None, pw=None, timeout=None, slaveonly=None, ssl=None):        
+    def __init__(self,
+                 host=None,
+                 port=None,
+                 pw=None,
+                 timeout=None,
+                 slaveonly=None,
+                 ssl=None):
         redishost = os.getenv('REDISHOST', 'localhost')
         if host != None:
             redishost = host
@@ -60,20 +65,20 @@ class Conn:
                                  socket_timeout=redistimeout,
                                  ssl=redisssl)
         else:
-            self.conn = StrictRedis(
-                host=redishost,
-                port=redisport,
-                password=redispassword,
-                db=0,
-                socket_timeout=redistimeout,
-                socket_keepalive=True,
-                retry_on_timeout=True,
-                decode_responses=False,
-                ssl_cert_reqs=None,
-                ssl=redisssl)
+            self.conn = StrictRedis(host=redishost,
+                                    port=redisport,
+                                    password=redispassword,
+                                    db=0,
+                                    socket_timeout=redistimeout,
+                                    socket_keepalive=True,
+                                    retry_on_timeout=True,
+                                    decode_responses=False,
+                                    ssl_cert_reqs=None,
+                                    ssl=redisssl)
         #Heat up the redis cache
         if "true" in os.getenv("PREPING", 'false').lower():
             self.conn.ping()
+
     def get_master(self):
         if self.sentinelmaster:
             return self.conn.master_for(self.sentinelmaster)

@@ -4,6 +4,7 @@ Classes for serializing and deserializing redis data into json
 import redistools
 from redistools.conn import Conn
 
+
 class RedisUtils:
     def __init__(self, **kwargs):
         self.conn = Conn(**kwargs)
@@ -61,7 +62,6 @@ class RedisDict():
     '''
     python dict-style class that enables transparent fetch and update against a redis hash backing store.
     '''
-
     def __init__(self, conn, key, ex=604800):
         self.key = key
         self.conn = conn
@@ -93,7 +93,6 @@ class RedisList():
     '''
     python array-style class that enables transparent fetch and update against a redis list.
     '''
-
     def __init__(self, conn, key, ex=604800):
         self.key = key
         self.conn = conn
@@ -142,7 +141,6 @@ class RedisSet():
     '''
     python array-style class that enables transparent fetch and update against a redis set
     '''
-
     def __init__(self, conn, key, ex=604800):
         self.key = key
         self.conn = conn
